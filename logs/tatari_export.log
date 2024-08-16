@@ -1,0 +1,23 @@
+2024-08-14 13:57:18,609 INFO utilities AMZ TATARI DATA EXPORT report data load begins at 2024-08-14 13:57:18.609963...
+2024-08-14 13:57:18,610 INFO utilities Impact report data load begins at 2024-08-14 13:57:18.610046...
+2024-08-14 13:57:18,610 INFO utilities Environment variables loaded
+2024-08-14 13:57:18,610 INFO utilities Script executed successfully
+2024-08-14 13:57:18,611 INFO snowflake.connector.connection Snowflake Connector for Python Version: 3.1.1, Python Version: 3.9.6, Platform: macOS-14.5-arm64-arm-64bit
+2024-08-14 13:57:18,611 INFO snowflake.connector.connection This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+2024-08-14 13:57:18,611 INFO snowflake.connector.connection Setting use_openssl_only mode to False
+2024-08-14 13:57:22,441 INFO snowflake.connector.cursor query: [USE WAREHOUSE COMPUTE_WH]
+2024-08-14 13:57:22,539 INFO snowflake.connector.cursor query execution done
+2024-08-14 13:57:22,540 INFO snowflake.connector.cursor Number of results in first chunk: 1
+2024-08-14 13:57:22,541 INFO snowflake.connector.cursor query: [USE ROLE ANALYST_DEV]
+2024-08-14 13:57:22,654 INFO snowflake.connector.cursor query execution done
+2024-08-14 13:57:22,658 INFO snowflake.connector.cursor Number of results in first chunk: 1
+2024-08-14 13:57:22,658 INFO snowflake.connector.cursor query: [USE DATABASE PROD_DB]
+2024-08-14 13:57:22,758 INFO snowflake.connector.cursor query execution done
+2024-08-14 13:57:22,758 INFO snowflake.connector.cursor Number of results in first chunk: 1
+2024-08-14 13:57:22,758 INFO snowflake.connector.cursor query: [select o.amazon_order_id as "Order ID" , o.purchase_date as "Order Timestamp" , ...]
+2024-08-14 13:57:23,183 INFO snowflake.connector.cursor query execution done
+2024-08-14 13:57:23,184 INFO snowflake.connector.cursor Number of results in first chunk: 0
+2024-08-14 13:57:25,901 INFO root Number of rows fetched: 61906
+2024-08-14 13:57:26,295 INFO utilities Uploading /Users/salmaelmasry/Desktop/amz_tatari_export/data/tatari_export_2024-08-14_13-57.csv to S3 as exports/tatari_export_2024-08-14_13-57.csv
+2024-08-14 13:57:57,798 INFO utilities File uploaded successfully to amz-tatari-exports/exports/tatari_export_2024-08-14_13-57.csv
+2024-08-14 13:57:58,515 INFO utilities Slack notification sent successfully.
