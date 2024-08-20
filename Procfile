@@ -1,0 +1,1 @@
+worker: python src/tatari_export.py
