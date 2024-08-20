@@ -1,6 +1,6 @@
 boto3
 botocore
-dotenv
+python-dotenv
 pandas
 requests
 snowflake-connector-python
