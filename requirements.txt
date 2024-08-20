@@ -4,3 +4,4 @@ python-dotenv
 pandas
 requests
 snowflake-connector-python
+matplotlib
