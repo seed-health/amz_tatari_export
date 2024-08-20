@@ -33,7 +33,9 @@ DB_ROLE = os.environ.get("SF_ROLE")
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-S3_BUCKET = os.environ.get("S3_BUCKET")
+# S3_BUCKET = os.environ.get("S3_BUCKET")
+S3_BUCKET_ARN = "arn:aws:s3:::tatari-partners-us-east-1"
+S3_PREFIX = "seed/"
 
 # Initialize logging
 os.makedirs(LOG_DIRECTORY, exist_ok=True)
@@ -54,6 +56,7 @@ def load_environment_variables():
 
     logger.info("Environment variables loaded")
 
+
 def setup_aws_credentials():
     """
     Set up AWS credentials using environment variables.
@@ -62,6 +65,18 @@ def setup_aws_credentials():
         "aws_access_key_id": AWS_ACCESS_KEY_ID,
         "aws_secret_access_key": AWS_SECRET_ACCESS_KEY,
     }
+
+def setup_aws_session():
+    """
+    Set up AWS session using credentials for dev_admin.
+    """
+    session = boto3.Session(
+        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+        region_name="us-east-1",  # specify the region if necessary
+    )
+    return session.client("s3")
+
 
 def setup_snowflake_credentials():
     """
@@ -81,16 +96,27 @@ def connect_to_snowflake(credentials):
     """
     return snowflake.connector.connect(**credentials)
 
-def upload_csv_files_to_s3(data_folder, s3_file_name_prefix, aws_credentials):
+import os
+import boto3
+import logging
+
+logger = logging.getLogger(__name__)
+
+def upload_csv_files_to_s3(data_folder, aws_credentials):
     """
     Upload all CSV files from a local folder to an S3 bucket.
 
     Parameters:
     data_folder (str): The local directory containing CSV files.
-    s3_file_name_prefix (str): The prefix for the S3 object key.
     aws_credentials (dict): AWS credentials for accessing S3.
     """
     try:
+        # Define the bucket name and prefix from the ARN
+        S3_BUCKET = "tatari-partners-us-east-1"
+        S3_PREFIX = "seed/"
+        SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL")
+        SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
+        # Initialize the S3 client
         s3 = boto3.client("s3", **aws_credentials)
         
         # Walk through the data folder to find all CSV files
@@ -98,7 +124,7 @@ def upload_csv_files_to_s3(data_folder, s3_file_name_prefix, aws_credentials):
             for file in files:
                 if file.endswith(".csv"):
                     local_file_path = os.path.join(root, file)
-                    s3_file_name = os.path.join(s3_file_name_prefix, file)
+                    s3_file_name = os.path.join(S3_PREFIX, file)
 
                     logger.info(f"Uploading {local_file_path} to S3 as {s3_file_name}")
 
@@ -110,12 +136,12 @@ def upload_csv_files_to_s3(data_folder, s3_file_name_prefix, aws_credentials):
                         )
 
                     logger.info(f"File uploaded successfully to {S3_BUCKET}/{s3_file_name}")
-                    slack_notification(SLACK_CHANNEL, SLACK_API_TOKEN, f":tatari1: File uploaded successfully to {S3_BUCKET}/{s3_file_name} :white_check_mark:")
+                    slack_notification(SLACK_CHANNEL, SLACK_API_TOKEN, f":tatari1: {s3_file_name} loaded successfully to S3 :white_check_mark:")
+
     
-    except NoCredentialsError:
-        logger.error("Credentials not available")
     except Exception as e:
-        logger.error(f"Error uploading file to S3: {e}")
+        logger.error(f"Failed to upload files to S3: {e}")
+
 
 def pull_data_from_snowflake(snowflake_connection):
     """
@@ -195,12 +221,13 @@ if __name__ == "__main__":
     logger.info("Script executed successfully")
     delete_old_files(f"{FILE_PATH}/data", pattern="*.csv")
     aws_credentials = setup_aws_credentials()
+    aws_session = setup_aws_session()
     snowflake_credentials = setup_snowflake_credentials()
     snowflake_connection = connect_to_snowflake(snowflake_credentials)
 
     data_table = pull_data_from_snowflake(snowflake_connection)
     try:
-        upload_csv_files_to_s3(f"{FILE_PATH}/data", "exports", aws_credentials)
+        upload_csv_files_to_s3(f"{FILE_PATH}/data", aws_credentials)
     except Exception as e:
         logger.error(f"Error uploading file to S3: {e}")
         slack_notification(SLACK_CHANNEL, SLACK_API_TOKEN, f":tatari1: Error uploading file to S3: {e} :x:")
