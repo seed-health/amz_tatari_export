@@ -1,13 +1,13 @@
 import os
 from dotenv import load_dotenv
 import logging
+import boto3
 import snowflake.connector
 from boto3.s3.transfer import S3Transfer
 import csv
 from utilities import *
 from io import StringIO
 import pandas as pd
-import boto3
 from datetime import datetime as dt
 from botocore.exceptions import NoCredentialsError
 import glob
@@ -19,11 +19,14 @@ LOG_FILE = os.environ.get("LOGGING_FILE")
 LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, LOG_FILE)
 LOGGING_HEADER = "AMZ TATARI DATA EXPORT"
 
-S3_FILE_NAME = f"{FILE_PATH}/data/tatari_export_{dt.now().strftime('%Y-%m-%d_%H-%M')}.csv"
+AMZ_S3_FILE_NAME = f"{FILE_PATH}/amz_data/amz_tatari_export_{dt.now().strftime('%Y-%m-%d_%H-%M')}.csv"
+TARGET_S3_FILE_NAME = f"{FILE_PATH}/target_target_data/tatari_export_{dt.now().strftime('%Y-%m-%d_%H-%M')}.csv"
 
 SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
 SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL")
 
+QUERY_DIRECTORY = f"{FILE_PATH}/queries"  # Directory where SQL files are stored
+QUERY_FILE = "amz_query.sql"  # SQL file to be executed
 DB_NAME = os.environ.get("SF_DATABASE")
 DB_USER = os.environ.get("SF_USER")
 DB_PASSWORD = os.environ.get("SF_PASSWORD")
@@ -96,13 +99,9 @@ def connect_to_snowflake(credentials):
     """
     return snowflake.connector.connect(**credentials)
 
-import os
-import boto3
-import logging
 
-logger = logging.getLogger(__name__)
 
-def upload_csv_files_to_s3(data_folder, aws_credentials):
+def upload_csv_files_to_s3(data_folder, aws_credentials, S3_PREFIX):
     """
     Upload all CSV files from a local folder to an S3 bucket.
 
@@ -112,8 +111,7 @@ def upload_csv_files_to_s3(data_folder, aws_credentials):
     """
     try:
         # Define the bucket name and prefix from the ARN
-        S3_BUCKET = "tatari-partners-us-east-1"
-        S3_PREFIX = "seed/"
+        S3_BUCKET = "tatari-exports"
         SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL")
         SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
         # Initialize the S3 client
@@ -142,8 +140,22 @@ def upload_csv_files_to_s3(data_folder, aws_credentials):
     except Exception as e:
         logger.error(f"Failed to upload files to S3: {e}")
 
+def read_sql_file(file_path):
+    """
+    Read a SQL query from a file.
+    
+    Parameters:
+    file_path (str): The path to the .sql file.
+    
+    Returns:
+    str: The content of the SQL file as a string.
+    """
+    with open(file_path, 'r') as file:
+        query = file.read()
+    return query
 
-def pull_data_from_snowflake(snowflake_connection):
+def pull_data_from_snowflake(snowflake_connection, query_file, file_name):
+    query_file = os.path.abspath(os.path.join(QUERY_DIRECTORY, query_file))
     """
     Query data from Snowflake and save it to a CSV file.
 
@@ -160,30 +172,14 @@ def pull_data_from_snowflake(snowflake_connection):
 
         cur.execute(
             f"""    
-            select
-                o.amazon_order_id as "Order ID"
-                , o.purchase_date as "Order Timestamp"
-                , o.number_of_items_shipped + number_of_items_unshipped as "Order Quantity"
-                , o.order_total_amount as "Order Revenue"
-                , oip.PROMOTION_ID as "promotion-ids"
-                , buyer_info_buyer_email as "Email"
-                , shipping_address_city as "City"
-                , shipping_address_state_or_region as "State"
-                , shipping_address_postal_code as "Zip Code"
-                from  MARKETING_DATABASE.AMAZON_SELLING_PARTNER.ORDERS o
-            left join MARKETING_DATABASE.AMAZON_SELLING_PARTNER.ORDER_ITEM as oi
-            on o.amazon_order_id = oi.amazon_order_id
-            left join MARKETING_DATABASE.AMAZON_SELLING_PARTNER.ORDER_ITEM_PROMOTION_ID as oip
-            on o.amazon_order_id = oip.amazon_order_id 
-
-            where shipping_address_country_code = 'US'
-"""
+            {read_sql_file(query_file)}
+            """
         )
         data = cur.fetchall()
         # Log the row count
         row_count = len(data)
         logging.info(f"Number of rows fetched: {row_count}")
-        file_name = f"{S3_FILE_NAME}"
+        file_name = f"{file_name}"
         with open(file_name, "w", newline='') as f:
             writer = csv.writer(f)
             writer.writerow([desc[0] for desc in cur.description])  # Write header row
@@ -219,15 +215,19 @@ if __name__ == "__main__":
 
     load_environment_variables()
     logger.info("Script executed successfully")
-    delete_old_files(f"{FILE_PATH}/data", pattern="*.csv")
+    delete_old_files(f"{FILE_PATH}/amz_data", pattern="*.csv")
+    delete_old_files(f"{FILE_PATH}/target_data", pattern="*.csv")
     aws_credentials = setup_aws_credentials()
     aws_session = setup_aws_session()
     snowflake_credentials = setup_snowflake_credentials()
     snowflake_connection = connect_to_snowflake(snowflake_credentials)
 
-    data_table = pull_data_from_snowflake(snowflake_connection)
+    amz_data_table = pull_data_from_snowflake(snowflake_connection, 'amz_pull.sql', AMZ_S3_FILE_NAME)
+    target_data_table = pull_data_from_snowflake(snowflake_connection, 'target_pull.sql', TARGET_S3_FILE_NAME)
     try:
-        upload_csv_files_to_s3(f"{FILE_PATH}/data", aws_credentials)
+        upload_csv_files_to_s3(f"{FILE_PATH}/amz_data", aws_credentials, "seed/amazon/")
+        upload_csv_files_to_s3(f"{FILE_PATH}/target_data", aws_credentials, "seed/target/")
+
     except Exception as e:
         logger.error(f"Error uploading file to S3: {e}")
         slack_notification(SLACK_CHANNEL, SLACK_API_TOKEN, f":tatari1: Error uploading file to S3: {e} :x:")
