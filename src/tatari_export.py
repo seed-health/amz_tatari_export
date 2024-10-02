@@ -20,7 +20,7 @@ LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, LOG_FILE)
 LOGGING_HEADER = "AMZ TATARI DATA EXPORT"
 
 AMZ_S3_FILE_NAME = f"{FILE_PATH}/amz_data/amz_tatari_export_{dt.now().strftime('%Y-%m-%d_%H-%M')}.csv"
-TARGET_S3_FILE_NAME = f"{FILE_PATH}/target_data/tatari_export_{dt.now().strftime('%Y-%m-%d_%H-%M')}.csv"
+TARGET_S3_FILE_NAME = f"{FILE_PATH}/target_data/target_tatari_export_{dt.now().strftime('%Y-%m-%d_%H-%M')}.csv"
 
 SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
 SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL")
