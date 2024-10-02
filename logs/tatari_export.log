@@ -1,39 +1,39 @@
-2024-10-02 09:38:36,519 INFO utilities AMZ TATARI DATA EXPORT report data load begins at 2024-10-02 09:38:36.519896...
-2024-10-02 09:38:36,519 INFO utilities Impact report data load begins at 2024-10-02 09:38:36.519992...
-2024-10-02 09:38:36,520 INFO utilities Environment variables loaded
-2024-10-02 09:38:36,520 INFO utilities Script executed successfully
-2024-10-02 09:38:36,709 INFO snowflake.connector.connection Snowflake Connector for Python Version: 3.1.1, Python Version: 3.9.6, Platform: macOS-14.7-arm64-arm-64bit
-2024-10-02 09:38:36,709 INFO snowflake.connector.connection This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
-2024-10-02 09:38:36,709 INFO snowflake.connector.connection Setting use_openssl_only mode to False
-2024-10-02 09:38:37,575 INFO snowflake.connector.cursor query: [USE WAREHOUSE COMPUTE_WH]
-2024-10-02 09:38:37,713 INFO snowflake.connector.cursor query execution done
-2024-10-02 09:38:37,713 INFO snowflake.connector.cursor Number of results in first chunk: 1
-2024-10-02 09:38:37,713 INFO snowflake.connector.cursor query: [USE ROLE ANALYST_DEV]
-2024-10-02 09:38:37,832 INFO snowflake.connector.cursor query execution done
-2024-10-02 09:38:37,832 INFO snowflake.connector.cursor Number of results in first chunk: 1
-2024-10-02 09:38:37,832 INFO snowflake.connector.cursor query: [USE DATABASE PROD_DB]
-2024-10-02 09:38:37,931 INFO snowflake.connector.cursor query execution done
-2024-10-02 09:38:37,931 INFO snowflake.connector.cursor Number of results in first chunk: 1
-2024-10-02 09:38:37,931 INFO snowflake.connector.cursor query: [select o.amazon_order_id as "Order ID" , o.purchase_date as "Order Timestamp" , ...]
-2024-10-02 09:38:38,089 INFO snowflake.connector.cursor query execution done
-2024-10-02 09:38:38,090 INFO snowflake.connector.cursor Number of results in first chunk: 0
-2024-10-02 09:38:41,244 INFO root Number of rows fetched: 96663
-2024-10-02 09:38:41,484 INFO snowflake.connector.cursor query: [USE WAREHOUSE COMPUTE_WH]
-2024-10-02 09:38:41,723 INFO snowflake.connector.cursor query execution done
-2024-10-02 09:38:41,724 INFO snowflake.connector.cursor Number of results in first chunk: 1
-2024-10-02 09:38:41,725 INFO snowflake.connector.cursor query: [USE ROLE ANALYST_DEV]
-2024-10-02 09:38:41,837 INFO snowflake.connector.cursor query execution done
-2024-10-02 09:38:41,837 INFO snowflake.connector.cursor Number of results in first chunk: 1
-2024-10-02 09:38:41,837 INFO snowflake.connector.cursor query: [USE DATABASE PROD_DB]
-2024-10-02 09:38:41,937 INFO snowflake.connector.cursor query execution done
-2024-10-02 09:38:41,937 INFO snowflake.connector.cursor Number of results in first chunk: 1
-2024-10-02 09:38:41,937 INFO snowflake.connector.cursor query: [SELECT * FROM PROD_DB.RETAIL.ALLOY_TARGET_SALES;]
-2024-10-02 09:38:42,071 INFO snowflake.connector.cursor query execution done
-2024-10-02 09:38:42,072 INFO snowflake.connector.cursor Number of results in first chunk: 0
-2024-10-02 09:38:42,694 INFO root Number of rows fetched: 59000
-2024-10-02 09:38:42,934 INFO utilities Uploading /Users/salmaelmasry/Desktop/amz_tatari_export/amz_data/tatari_export_2024-10-02_09-38.csv to S3 as seed/amazon/tatari_export_2024-10-02_09-38.csv
-2024-10-02 09:39:33,853 INFO utilities File uploaded successfully to tatari-exports/seed/amazon/tatari_export_2024-10-02_09-38.csv
-2024-10-02 09:39:34,451 INFO utilities Slack notification sent successfully.
-2024-10-02 09:39:34,645 INFO utilities Uploading /Users/salmaelmasry/Desktop/amz_tatari_export/target_data/tatari_export_2024-10-02_09-38.csv to S3 as seed/target/tatari_export_2024-10-02_09-38.csv
-2024-10-02 09:40:16,011 INFO utilities File uploaded successfully to tatari-exports/seed/target/tatari_export_2024-10-02_09-38.csv
-2024-10-02 09:40:16,482 INFO utilities Slack notification sent successfully.
+2024-10-02 10:43:57,008 INFO utilities AMZ TATARI DATA EXPORT report data load begins at 2024-10-02 10:43:57.008085...
+2024-10-02 10:43:57,008 INFO utilities Impact report data load begins at 2024-10-02 10:43:57.008171...
+2024-10-02 10:43:57,008 INFO utilities Environment variables loaded
+2024-10-02 10:43:57,008 INFO utilities Script executed successfully
+2024-10-02 10:43:57,223 INFO snowflake.connector.connection Snowflake Connector for Python Version: 3.1.1, Python Version: 3.9.6, Platform: macOS-14.7-arm64-arm-64bit
+2024-10-02 10:43:57,224 INFO snowflake.connector.connection This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+2024-10-02 10:43:57,224 INFO snowflake.connector.connection Setting use_openssl_only mode to False
+2024-10-02 10:43:58,002 INFO snowflake.connector.cursor query: [USE WAREHOUSE COMPUTE_WH]
+2024-10-02 10:43:58,099 INFO snowflake.connector.cursor query execution done
+2024-10-02 10:43:58,100 INFO snowflake.connector.cursor Number of results in first chunk: 1
+2024-10-02 10:43:58,100 INFO snowflake.connector.cursor query: [USE ROLE ANALYST_DEV]
+2024-10-02 10:43:58,224 INFO snowflake.connector.cursor query execution done
+2024-10-02 10:43:58,225 INFO snowflake.connector.cursor Number of results in first chunk: 1
+2024-10-02 10:43:58,225 INFO snowflake.connector.cursor query: [USE DATABASE PROD_DB]
+2024-10-02 10:43:58,325 INFO snowflake.connector.cursor query execution done
+2024-10-02 10:43:58,326 INFO snowflake.connector.cursor Number of results in first chunk: 1
+2024-10-02 10:43:58,328 INFO snowflake.connector.cursor query: [select o.amazon_order_id as "Order ID" , o.purchase_date as "Order Timestamp" , ...]
+2024-10-02 10:43:58,543 INFO snowflake.connector.cursor query execution done
+2024-10-02 10:43:58,544 INFO snowflake.connector.cursor Number of results in first chunk: 0
+2024-10-02 10:44:04,739 INFO root Number of rows fetched: 96663
+2024-10-02 10:44:04,980 INFO snowflake.connector.cursor query: [USE WAREHOUSE COMPUTE_WH]
+2024-10-02 10:44:05,345 INFO snowflake.connector.cursor query execution done
+2024-10-02 10:44:05,346 INFO snowflake.connector.cursor Number of results in first chunk: 1
+2024-10-02 10:44:05,347 INFO snowflake.connector.cursor query: [USE ROLE ANALYST_DEV]
+2024-10-02 10:44:05,441 INFO snowflake.connector.cursor query execution done
+2024-10-02 10:44:05,442 INFO snowflake.connector.cursor Number of results in first chunk: 1
+2024-10-02 10:44:05,442 INFO snowflake.connector.cursor query: [USE DATABASE PROD_DB]
+2024-10-02 10:44:05,539 INFO snowflake.connector.cursor query execution done
+2024-10-02 10:44:05,539 INFO snowflake.connector.cursor Number of results in first chunk: 1
+2024-10-02 10:44:05,541 INFO snowflake.connector.cursor query: [SELECT * FROM PROD_DB.RETAIL.ALLOY_TARGET_SALES;]
+2024-10-02 10:44:05,700 INFO snowflake.connector.cursor query execution done
+2024-10-02 10:44:05,701 INFO snowflake.connector.cursor Number of results in first chunk: 0
+2024-10-02 10:44:07,137 INFO root Number of rows fetched: 59000
+2024-10-02 10:44:07,421 INFO utilities Uploading /Users/salmaelmasry/Desktop/amz_tatari_export/amz_data/amz_tatari_export_2024-10-02_10-43.csv to S3 as seed/amazon/amz_tatari_export_2024-10-02_10-43.csv
+2024-10-02 10:44:57,720 INFO utilities File uploaded successfully to tatari-partners-us-east-1/seed/amazon/amz_tatari_export_2024-10-02_10-43.csv
+2024-10-02 10:44:58,365 INFO utilities Slack notification sent successfully.
+2024-10-02 10:44:58,531 INFO utilities Uploading /Users/salmaelmasry/Desktop/amz_tatari_export/target_data/target_tatari_export_2024-10-02_10-43.csv to S3 as seed/target/target_tatari_export_2024-10-02_10-43.csv
+2024-10-02 10:45:35,540 INFO utilities File uploaded successfully to tatari-partners-us-east-1/seed/target/target_tatari_export_2024-10-02_10-43.csv
+2024-10-02 10:45:36,138 INFO utilities Slack notification sent successfully.

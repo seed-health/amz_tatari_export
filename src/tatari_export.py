@@ -111,7 +111,7 @@ def upload_csv_files_to_s3(data_folder, aws_credentials, S3_PREFIX):
     """
     try:
         # Define the bucket name and prefix from the ARN
-        S3_BUCKET = "tatari-exports"
+        S3_BUCKET = "tatari-partners-us-east-1"
         SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL")
         SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
         # Initialize the S3 client
